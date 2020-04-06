@@ -1,0 +1,125 @@
+def tic_board():
+    print()
+    print('---------')
+    print('| ' + board['13'] + ' ' + board['23'] + ' ' + board['33'] + ' |')
+    print('| ' + board['12'] + ' ' + board['22'] + ' ' + board['32'] + ' |')
+    print('| ' + board['11'] + ' ' + board['21'] + ' ' + board['31'] + ' |')
+    print('---------')
+    print()
+
+
+def check():
+    global number_of_blanks, winner
+
+    if board['13'] == board['23'] and board['13'] == board['33'] and board['13'] != ' ':
+        winner.append(board['13'])
+    if board['13'] == board['22'] and board['13'] == board['31'] and board['13'] != ' ':
+        winner.append(board['13'])
+    if board['13'] == board['12'] and board['13'] == board['11'] and board['13'] != ' ':
+        winner.append(board['13'])
+    if board['23'] == board['22'] and board['23'] == board['21'] and board['23'] != ' ':
+        winner.append(board['23'])
+    if board['33'] == board['22'] and board['33'] == board['11'] and board['33'] != ' ':
+        winner.append(board['33'])
+    if board['33'] == board['32'] and board['33'] == board['31'] and board['33'] != ' ':
+        winner.append(board['33'])
+    if board['12'] == board['22'] and board['12'] == board['32'] and board['12'] != ' ':
+        winner.append(board['12'])
+    if board['11'] == board['21'] and board['11'] == board['31'] and board['11'] != ' ':
+        winner.append(board['11'])
+
+    counter = 0
+
+    for i in board:
+        if board[i] != ' ':
+            counter += 1
+
+    if len(winner) == 1:
+        return f'{winner[0]}'
+    elif len(winner) == 0 and counter != 9:
+        return 'not_finished'
+    elif counter == 9 and len(winner) == 0:
+        return 'draw'
+
+
+def x_move():
+    global move_o, move_x, coords
+    while True:
+        coords = input('Enter the coordinates: ')
+        print(coords)
+        if coords.replace(' ', '').isdigit():
+            if 4 > int(coords[0]) > 0 and 4 > int(coords[2]) > 0:
+                if board[coords.replace(' ', '')] == '_' or board[coords.replace(' ', '')] == ' ':
+                    board[coords.replace(' ', '')] = 'X'
+                    tic_board()
+                    break
+                else:
+                    print('This cell is occupied! Choose another one!')
+            else:
+                print('Coordinates should be from 1 to 3!')
+        else:
+            print('You should enter numbers!')
+
+    move_o = 1
+    move_x = 0
+
+
+def o_move():
+    global move_x, move_o, coords
+    while True:
+        coords = input('Enter the coordinates: ').replace(' ', '')
+        if coords.isdigit():
+            if 4 > int(coords[0]) > 0 and 4 > int(coords[1]) > 0:
+                if board[coords.replace(' ', '')] == '_' or board[coords.replace(' ', '')] == ' ':
+                    board[coords] = 'O'
+                    tic_board()
+                    break
+                else:
+                    print('This cell is occupied! Choose another one!')
+            else:
+                print('Coordinates should be from 1 to 3!')
+        else:
+            print('You should enter numbers!')
+
+    move_x = 1
+    move_o = 0
+
+
+board = {'13': ' ', '23': ' ', '33': ' ',
+         '12': ' ', '22': ' ', '32': ' ',
+         '11': ' ', '21': ' ', '31': ' '}
+number_of_blanks = []
+winner = []
+coords = ''
+checked = check()
+move_x = 1
+move_o = 0
+finished = False
+tic_board()
+x_move()
+
+while not finished:
+    checked = check()
+    if checked == 'not_finished':
+        if move_x == 1:
+            x_move()
+        elif move_o == 1:
+            o_move()
+
+    if checked != 'not_finished':
+        finished = True
+
+if checked == board['13']:
+    print(board['13'] + ' wins')
+elif checked == board['23']:
+    print(board['23'] + ' wins')
+elif checked == board['33']:
+    print(board['33'] + ' wins')
+elif checked == board['12']:
+    print(board['12'] + ' wins')
+elif checked == board['11']:
+    print(board['11'] + ' wins')
+elif checked == 'not_finished':
+    print('Game not finished')
+elif checked == 'draw':
+    print('Draw')
